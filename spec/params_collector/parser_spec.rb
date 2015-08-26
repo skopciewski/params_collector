@@ -39,5 +39,29 @@ module ParamsCollector
       When { parser.parse(params) }
       Then { parser[:option] == true }
     end
+
+    describe "when expected two params" do
+      Given!(:parser) do
+        ParamsCollector.expect do
+          boolean :option
+          number :num
+        end
+      end
+      When { parser.parse(params) }
+
+      context "with one matching param" do
+        Given(:params) { { num: "2" } }
+        Then { parser[:option] == false }
+        And { parser[:num] == 2 }
+        And { expect(parser).not_to be_valid }
+      end
+
+      context "with two matching params" do
+        Given(:params) { { option: "true", num: "2" } }
+        Then { parser[:option] == true }
+        And { parser[:num] == 2 }
+        And { expect(parser).to be_valid }
+      end
+    end
   end
 end
