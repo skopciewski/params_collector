@@ -63,5 +63,8 @@ module ParamsCollector
         And { expect(parser).to be_valid }
       end
     end
+
+    describe "setting default value" do
+    end
   end
 end
