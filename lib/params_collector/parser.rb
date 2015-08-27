@@ -78,10 +78,10 @@ module ParamsCollector
     end
 
     def presentable?(key)
-      @valid[key] && changed?(key)
+      @valid[key] && different_than_default?(key)
     end
 
-    def changed?(key)
+    def different_than_default?(key)
       @params[key].value != @defaults[key].value
     end
 
