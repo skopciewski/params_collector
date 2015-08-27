@@ -21,20 +21,20 @@ require "params_collector/marshaler/deep_symbolize_keys"
 
 module ParamsCollector
   module Marshaler
-    class HashMarshaler
-      ParamsCollector::Parser.register_marshaler("hash", name)
+    class ArrayMarshaler
+      ParamsCollector::Parser.register_marshaler("array", name)
 
       include DeepSymbolizeKeys
       attr_reader :value
 
       def initialize
-        @default_value = {}
+        @default_value = []
         @value = @default_value
       end
 
       def set(value)
         @value = @default_value if value.nil?
-        @value = symbolize(value) if value.is_a?(Hash)
+        @value = symbolize(value) if value.is_a?(Array)
       end
     end
   end

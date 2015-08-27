@@ -32,8 +32,9 @@ module ParamsCollector
     end
 
     def parse(params)
-      params.each do |key, val|
-        prepare_param(key, val) if @params.key?(key.to_sym)
+      params.each do |key, value|
+        key = key.to_sym
+        prepare_param(key, value) if @params.key?(key.to_sym)
       end
     end
 
@@ -46,10 +47,8 @@ module ParamsCollector
     end
 
     def to_hash
-      @params.each_with_object({}) do |row, result|
-        key = row[0]
-        value = row[1].value
-        result[key] = value if presentable?(key)
+      @params.each_with_object({}) do |(key, marshaler), result|
+        result[key] = marshaler.value if presentable?(key)
         result
       end
     end
@@ -65,14 +64,12 @@ module ParamsCollector
     def declare_params(key, default, marshaler)
       marshaler_instance = marshaler.new
       marshaler_instance.set(default)
-      key = key.to_sym
       @params[key] = marshaler_instance
       @defaults[key] = marshaler_instance.dup
       @valid[key] = !default.nil?
     end
 
     def prepare_param(key, value)
-      key = key.to_sym
       @params[key].set(value)
       @valid[key] = true
     end
@@ -87,6 +84,7 @@ module ParamsCollector
 
     def self.register_marshaler(name, marshaler)
       method_text = "def #{name}(key, default = nil)
+        key = key.to_sym
         declare_params(key, default, #{marshaler})
       end"
       Parser.module_eval(method_text)

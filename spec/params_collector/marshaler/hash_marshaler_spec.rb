@@ -22,11 +22,11 @@ module ParamsCollector
       describe "setting hash value" do
         Given(:params) { { a: 1, "b" => "foo", c: { x: 1, "y" => 2 } } }
         When { marshaler.set params }
-        Then { marshaler.value == { "a" => 1, "b" => "foo", "c" => { "x" => 1, "y" => 2 } } }
+        Then { marshaler.value == { a: 1, b: "foo", c: { x: 1, y: 2 } } }
 
         context "with nested array" do
           Given(:params) { { "a" => [123, { x: 1, "y" => 2 }] } }
-          Then { marshaler.value == { "a" => [123, { "x" => 1, "y" => 2 }] } }
+          Then { marshaler.value == { a: [123, { x: 1, y: 2 }] } }
         end
       end
 

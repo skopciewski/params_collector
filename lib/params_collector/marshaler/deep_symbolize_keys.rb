@@ -17,24 +17,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require "params_collector/marshaler/deep_symbolize_keys"
-
 module ParamsCollector
   module Marshaler
-    class HashMarshaler
-      ParamsCollector::Parser.register_marshaler("hash", name)
-
-      include DeepSymbolizeKeys
-      attr_reader :value
-
-      def initialize
-        @default_value = {}
-        @value = @default_value
+    module DeepSymbolizeKeys
+      def symbolize(data)
+        if data.is_a?(Hash)
+          build_symbolized_hash(data)
+        elsif data.is_a?(Array)
+          build_symbolized_array(data)
+        else
+          data
+        end
       end
 
-      def set(value)
-        @value = @default_value if value.nil?
-        @value = symbolize(value) if value.is_a?(Hash)
+      private
+
+      def build_symbolized_hash(data)
+        data.each_with_object({}) do |(k, v), memo|
+          memo[k.to_sym] = symbolize(v)
+          memo
+        end
+      end
+
+      def build_symbolized_array(data)
+        data.each_with_object([]) do |v, memo|
+          memo << symbolize(v)
+          memo
+        end
       end
     end
   end
