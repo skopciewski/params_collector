@@ -64,15 +64,11 @@ module ParamsCollector
 
     def declare_params(key, default, marshaler)
       marshaler_instance = marshaler.new
-      valid_state = false
-      unless default.nil?
-        marshaler_instance.set(default)
-        valid_state = true
-      end
+      marshaler_instance.set(default)
       key = key.to_sym
       @params[key] = marshaler_instance
       @defaults[key] = marshaler_instance.dup
-      @valid[key] = valid_state
+      @valid[key] = !default.nil?
     end
 
     def prepare_param(key, value)

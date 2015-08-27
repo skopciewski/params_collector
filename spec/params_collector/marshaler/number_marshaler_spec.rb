@@ -13,6 +13,12 @@ module ParamsCollector
         Then { marshaler.value == 0 }
       end
 
+      describe "setting default value" do
+        Given { marshaler.set 123 }
+        When { marshaler.set nil }
+        Then { marshaler.value == 0 }
+      end
+
       describe "setting integer value" do
         When { marshaler.set 1 }
         Then { marshaler.value == 1 }

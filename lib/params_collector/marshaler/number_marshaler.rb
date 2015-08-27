@@ -24,10 +24,12 @@ module ParamsCollector
       attr_reader :value
 
       def initialize
-        @value = 0
+        @default_value = 0
+        @value = @default_value
       end
 
       def set(value)
+        @value = @default_value if value.nil?
         @value = value if value.is_a?(Fixnum) || value.is_a?(Float)
         @value = parse_string(value) if value.is_a?(String)
       end
@@ -40,7 +42,7 @@ module ParamsCollector
         elsif value.match(/^[0-9\.]+$/)
           return value.to_f
         end
-        0
+        @default_value
       end
     end
   end

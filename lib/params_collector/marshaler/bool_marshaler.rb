@@ -24,10 +24,12 @@ module ParamsCollector
       attr_reader :value
 
       def initialize
-        @value = false
+        @default_value = false
+        @value = @default_value
       end
 
       def set(value)
+        @value = @default_value if value.nil?
         @value = check_string(value) if value.is_a?(String)
         @value = true if value.is_a?(TrueClass)
         @value = value > 0 if value.is_a?(Fixnum) || value.is_a?(Float)

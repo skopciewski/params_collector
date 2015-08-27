@@ -13,6 +13,12 @@ module ParamsCollector
         Then { marshaler.value == "" }
       end
 
+      describe "setting default value" do
+        Given { marshaler.set "foo" }
+        When { marshaler.set nil }
+        Then { marshaler.value == "" }
+      end
+
       describe "setting string value" do
         When { marshaler.set "ala ma kota" }
         Then { marshaler.value == "ala ma kota" }
