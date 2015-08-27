@@ -28,6 +28,7 @@ module ParamsCollector
     def initialize
       @valid = {}
       @params = {}
+      @defaults = {}
     end
 
     def parse(params)
@@ -44,6 +45,15 @@ module ParamsCollector
       @params[name].value
     end
 
+    def to_hash
+      @params.each_with_object({}) do |row, result|
+        key = row[0]
+        value = row[1].value
+        result[key] = value if presentable?(key)
+        result
+      end
+    end
+
     private
 
     def declare_params(key, default, marshaler)
@@ -55,6 +65,7 @@ module ParamsCollector
       end
       key = key.to_sym
       @params[key] = marshaler_instance
+      @defaults[key] = marshaler_instance.dup
       @valid[key] = valid_state
     end
 
@@ -62,6 +73,14 @@ module ParamsCollector
       key = key.to_sym
       @params[key].set(value)
       @valid[key] = true
+    end
+
+    def presentable?(key)
+      @valid[key] && changed?(key)
+    end
+
+    def changed?(key)
+      @params[key].value != @defaults[key].value
     end
 
     def self.register_marshaler(name, marshaler)

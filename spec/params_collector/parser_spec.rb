@@ -7,11 +7,15 @@ module ParamsCollector
   describe Parser do
     describe "without any expected params" do
       Given!(:parser) { ParamsCollector.expect {} }
-      Then { expect(parser).to be_valid }
+      When { parser.parse(params) }
+
+      context "without params" do
+        Given(:params) { {} }
+        Then { expect(parser).to be_valid }
+      end
 
       context "when given some params" do
         Given(:params) { { a: 1, b: 2 } }
-        When { parser.parse(params) }
         Then { expect(parser).to be_valid }
       end
     end
@@ -65,6 +69,45 @@ module ParamsCollector
     end
 
     describe "setting default value" do
+      Given!(:parser) do
+        ParamsCollector.expect do
+          number :num, 2
+          string :desc
+        end
+      end
+      When { parser.parse(params) }
+
+      context "without any params" do
+        Given(:params) { {} }
+        Then { expect(parser).not_to be_valid }
+        And { parser[:num] == 2 }
+        And { parser[:desc] == "" }
+        And { parser.to_hash == {} }
+      end
+
+      context "with num given" do
+        Given(:params) { { num: 3 } }
+        Then { expect(parser).not_to be_valid }
+        And { parser[:num] == 3 }
+        And { parser[:desc] == "" }
+        And { parser.to_hash == { num: 3 } }
+      end
+
+      context "with desc given" do
+        Given(:params) { { desc: "foo" } }
+        Then { expect(parser).to be_valid }
+        And { parser[:num] == 2 }
+        And { parser[:desc] == "foo" }
+        And { parser.to_hash == { desc: "foo" } }
+      end
+
+      context "with all params" do
+        Given(:params) { { num: 3, desc: "foo" } }
+        Then { expect(parser).to be_valid }
+        And { parser[:num] == 3 }
+        And { parser[:desc] == "foo" }
+        And { parser.to_hash == { num: 3, desc: "foo" } }
+      end
     end
   end
 end
