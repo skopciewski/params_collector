@@ -34,7 +34,7 @@ module ParamsCollector
     def parse(params)
       params.each do |key, value|
         key = key.to_sym
-        prepare_param(key, value) if @params.key?(key.to_sym)
+        prepare_param(key, value) if @params.key?(key)
       end
     end
 
@@ -47,9 +47,9 @@ module ParamsCollector
     end
 
     def to_hash
-      @params.each_with_object({}) do |(key, marshaler), result|
-        result[key] = marshaler.value if presentable?(key)
-        result
+      @params.each_with_object({}) do |(key, marshaler), memo|
+        memo[key] = marshaler.value if presentable?(key)
+        memo
       end
     end
 
