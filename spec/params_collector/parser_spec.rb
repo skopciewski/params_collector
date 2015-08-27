@@ -20,23 +20,6 @@ module ParamsCollector
       end
     end
 
-    describe "with expected boolean param" do
-      Given!(:parser) { ParamsCollector.expect { boolean :option } }
-      When { parser.parse(params) }
-
-      context "when no params parsed" do
-        Given(:params) { {} }
-        Then { parser[:option] == false }
-        And { expect(parser).not_to be_valid }
-      end
-
-      context "when expected params parsed" do
-        Given(:params) { { option: 1, foo: 2 } }
-        Then { parser[:option] == true }
-        And { expect(parser).to be_valid }
-      end
-    end
-
     describe "all keys to symbols" do
       Given!(:parser) { ParamsCollector.expect { boolean "option" } }
       Given(:params) { { "option" => 1 } }
@@ -52,6 +35,13 @@ module ParamsCollector
         end
       end
       When { parser.parse(params) }
+
+      context "withot params" do
+        Given(:params) { {} }
+        Then { parser[:option] == false }
+        And { parser[:num] == 0 }
+        And { expect(parser).not_to be_valid }
+      end
 
       context "with one matching param" do
         Given(:params) { { num: "2" } }
@@ -108,6 +98,21 @@ module ParamsCollector
         And { parser[:desc] == "foo" }
         And { parser.to_hash == { num: 3, desc: "foo" } }
       end
+    end
+
+    describe ".merge" do
+      Given!(:parser) do
+        ParamsCollector.expect do
+          boolean :option, false
+          number :num, 2
+          string :desc
+        end
+      end
+      Given(:params) { { option: true, desc: "foo" } }
+      Given(:new_params) { { desc: "bar", xxx: 0 } }
+      Given { parser.parse(params) }
+      When(:result) { parser.merge(new_params) }
+      Then { result == { option: true, desc: "bar" } }
     end
   end
 end

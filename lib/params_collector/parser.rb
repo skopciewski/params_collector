@@ -54,6 +54,12 @@ module ParamsCollector
       end
     end
 
+    def merge(params)
+      new_parser = dup
+      new_parser.parse(params)
+      new_parser.to_hash
+    end
+
     private
 
     def declare_params(key, default, marshaler)
