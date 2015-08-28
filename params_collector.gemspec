@@ -11,8 +11,8 @@ Gem::Specification.new do |spec|
   spec.version       = ParamsCollector::VERSION
   spec.authors       = ["Szymon Kopciewski"]
   spec.email         = "s.kopciewski@gmail.com"
-  spec.summary       = ""
-  spec.description   = ""
+  spec.summary       = "Checking, parsing and normalizing the expexted params."
+  spec.description   = "Checking, parsing and normalizing the expexted params."
   spec.homepage      = "https://github.com/skopciewski/params_collector"
   spec.license       = "GPL-3.0"
 
