@@ -50,7 +50,7 @@ parser[:num]        # => 4
 parser[:desc]       # => "foo"
 
 parser.to_hash      # => { option1: true, desc: "foo" }
-parser.merge num: 2 # => { option1: true, page: 2, desc: "foo" }
+parser.merge num: 2 # => { option1: true, num: 2, desc: "foo" }
 ```
 
 If you call `to_hash` method, the output will contain only parameters that are 
