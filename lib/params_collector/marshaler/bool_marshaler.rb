@@ -1,6 +1,6 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-# Copyright (C) 2015 Szymon Kopciewski
+# Copyright (C) 2015, 2016, 2017 Szymon Kopciewski
 #
 # This file is part of ParamsCollector.
 #
@@ -32,7 +32,7 @@ module ParamsCollector
         @value = @default_value if value.nil?
         @value = check_string(value) if value.is_a?(String)
         @value = true if value.is_a?(TrueClass)
-        @value = value > 0 if value.is_a?(Fixnum) || value.is_a?(Float)
+        @value = value.positive? if value.is_a?(Integer) || value.is_a?(Float)
       end
 
       private
