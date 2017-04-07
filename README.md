@@ -1,6 +1,8 @@
 # ParamsCollector
 
 [![Gem Version](https://badge.fury.io/rb/params_collector.svg)](http://badge.fury.io/rb/params_collector)
+[![Code Climate](https://codeclimate.com/github/skopciewski/params_collector/badges/gpa.svg)](https://codeclimate.com/github/skopciewski/params_collector)
+[![Dependency Status](https://gemnasium.com/badges/github.com/skopciewski/params_collector.svg)](https://gemnasium.com/github.com/skopciewski/params_collector)
 
 ## Installation
 

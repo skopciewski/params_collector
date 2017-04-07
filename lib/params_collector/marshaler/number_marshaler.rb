@@ -1,6 +1,6 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-# Copyright (C) 2015 Szymon Kopciewski
+# Copyright (C) 2015, 2016, 2017 Szymon Kopciewski
 #
 # This file is part of ParamsCollector.
 #
@@ -30,18 +30,15 @@ module ParamsCollector
 
       def set(value)
         @value = @default_value if value.nil?
-        @value = value if value.is_a?(Fixnum) || value.is_a?(Float)
+        @value = value if value.is_a?(Integer) || value.is_a?(Float)
         @value = parse_string(value) if value.is_a?(String)
       end
 
       private
 
       def parse_string(value)
-        if value.match(/^\d+$/)
-          return value.to_i
-        elsif value.match(/^[0-9\.]+$/)
-          return value.to_f
-        end
+        return value.to_i if value =~ /^\d+$/
+        return value.to_f if value =~ /^[0-9\.]+$/
         @default_value
       end
     end

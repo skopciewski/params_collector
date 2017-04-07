@@ -1,6 +1,6 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-# Copyright (C) 2015 Szymon Kopciewski
+# Copyright (C) 2015, 2016, 2017 Szymon Kopciewski
 #
 # This file is part of ParamsCollector.
 #
@@ -25,6 +25,14 @@ module ParamsCollector
   end
 
   class Parser
+    def self.register_marshaler(name, marshaler)
+      method_text = "def #{name}(key, default = nil)
+        key = key.to_sym
+        declare_params(key, default, #{marshaler})
+      end"
+      Parser.module_eval(method_text)
+    end
+
     def initialize
       @valid = {}
       @params = {}
@@ -39,7 +47,7 @@ module ParamsCollector
     end
 
     def valid?
-      ! @valid.any? { |_, value| value == false }
+      !@valid.any? { |_, value| value == false }
     end
 
     def [](name)
@@ -80,14 +88,6 @@ module ParamsCollector
 
     def different_than_default?(key)
       @params[key].value != @defaults[key].value
-    end
-
-    def self.register_marshaler(name, marshaler)
-      method_text = "def #{name}(key, default = nil)
-        key = key.to_sym
-        declare_params(key, default, #{marshaler})
-      end"
-      Parser.module_eval(method_text)
     end
   end
 end
